@@ -1,0 +1,12 @@
+
+__pycache__/
+*.pyc     
+venv/
+data/
+*.faiss
+
+*.db
+
+.ollama/
+
+.DS_Store
