@@ -1,167 +1,110 @@
-🧠 Autonomous Codebase Intelligence Agent
+# 🧠 Autonomous Codebase Intelligence Agent
 
-An offline, agentic AI system that understands codebases, answers architecture and logic questions, detects changes automatically, and provides grounded explanations using local LLMs and vector memory — without relying on third-party APIs.
+An **offline, agentic AI system** that understands codebases, answers architecture and logic questions, and stays up-to-date automatically using **local LLMs and vector memory** — without third-party APIs.
 
-🚀 Overview
+---
 
-Modern codebases grow large and complex, making it difficult to:
+## 🚀 Overview
 
-Understand architecture quickly
+Large codebases are hard to understand, navigate, and maintain.  
+This project builds an **autonomous code intelligence agent** that:
 
-Locate where logic is implemented
+- Ingests local or GitHub-hosted codebases
+- Chunks code into semantic units (functions/classes)
+- Stores embeddings in FAISS for meaning-based retrieval
+- Uses an LLM to reason **only over retrieved code**
+- Automatically re-indexes when files change
 
-Onboard new developers
+Everything runs **fully offline**.
 
-Maintain up-to-date mental models
+---
 
-This project solves that by building an autonomous code intelligence agent that:
+## ✨ Key Features
 
-Ingests a local or GitHub-hosted codebase
+- **Semantic Code Understanding**  
+  Function- and class-level chunking with FAISS-based retrieval.
 
-Builds semantic memory using embeddings
+- **Grounded AI Reasoning**  
+  Retrieval-augmented generation (RAG) to avoid hallucinations.
 
-Retrieves relevant code context
+- **Autonomous Updates**  
+  File watcher detects changes and refreshes embeddings automatically.
 
-Uses an LLM to reason only over retrieved code
+- **Offline & Self-Hosted**  
+  Local LLMs (Ollama + LLaMA 3), no APIs or tokens required.
 
-Automatically updates itself when files change
+- **GitHub Support**  
+  Accepts GitHub URLs via `git clone` (no GitHub API).
 
-All of this runs fully offline.
+---
 
-✨ Key Features
-🔹 Semantic Code Understanding
+## 🏗️ Architecture
 
-Parses and chunks code into functions, classes, and logical blocks
-
-Stores semantic embeddings in FAISS
-
-Enables meaning-based search, not keyword matching
-
-🔹 Grounded AI Reasoning (No Hallucinations)
-
-Uses retrieval-augmented generation (RAG)
-
-LLM answers strictly using retrieved code context
-
-If information is missing, the agent explicitly says so
-
-🔹 Autonomous / Agentic Behavior
-
-Watches the codebase for file changes
-
-Automatically re-indexes when code is modified
-
-Keeps vector memory always up-to-date
-
-Runs continuously without manual intervention
-
-🔹 Offline & Self-Hosted
-
-Uses local LLMs (Ollama + LLaMA 3)
-
-No cloud APIs, no tokens, no rate limits
-
-Works entirely on your machine
-
-🔹 GitHub Repository Support
-
-Accepts a GitHub URL
-
-Clones the repository locally using git
-
-Runs the same intelligence pipeline as for local folders
-
-No GitHub API usage required
-
-🔹 Modular & Extensible Architecture
-
-Clean separation of concerns:
-
-Ingestion
-
-Chunking
-
-Embeddings
-
-Vector storage
-
-Reasoning
-
-Agent behaviors
-
-Easy to extend with:
-
-Bug detection
-
-Refactoring suggestions
-
-Architecture summarization
-
-
-🏗️ System Architecture
-Codebase (Local / GitHub)
-        ↓
-File Ingestion Agent
-        ↓
-Semantic Chunking (AST + Fallback)
-        ↓
-Embedding Generation
-        ↓
-FAISS Vector Store + Metadata DB
-        ↓
-Semantic Retrieval
-        ↓
-LLM Reasoning (Grounded)
-        ↓
-Human-Readable Answers
-
+```text
+Codebase → Ingestion → Chunking → Embeddings
+        → FAISS + Metadata → Retrieval → LLM Reasoning
+```
 
 Autonomous mode adds:
+```text
+File Watcher → Re-Indexing
+```
 
-File Watcher → Incremental Re-Indexing
+Tech Stack :
+- Python 3.10+
+- LLM: LLaMA 3 (Ollama, quantized)
+- Embeddings: Sentence Transformers (MiniLM)
+- Vector DB: FAISS 
+- Metadata: SQLite
+- Agent Runtime: watchdog
 
-🧰 Tech Stack
+## How to run this :
 
-Language: Python 3.10+
-
-LLM: LLaMA 3 (quantized, via Ollama)
-
-Embeddings: Sentence Transformers (MiniLM)
-
-Vector DB: FAISS
-
-Metadata Store: SQLite
-
-Agent Runtime: watchdog (file system events)
-
-Version Control Ingestion: git (CLI)
-
-Interface: CLI (extensible to FastAPI)
-
-📦 Installation
-1. Clone the repository
+Clone the repository:
+```bash
 git clone <your-repo-url>
-cd codebase-agent
+cd <ai-code-reviewer-agent>
+```
 
-2. Create virtual environment
+Create and activate a virtual environment:
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
 
-3. Install dependencies
+
+Install dependencies:
+```bash
 pip install -r requirements.txt
+```
 
-4. Install & run Ollama
+This installs FAISS, sentence-transformers, watchdog, the Ollama Python client, and other required libraries.
+
+Pull the LLM model (one-time setup):
+```bash
 ollama pull llama3:8b-instruct-q4_K_M
+```
 
-▶️ Usage
-Index a local codebase
-python -m agent.cli index ./my_project
 
-Index a GitHub repository
+## How to run Different methods:
+
+**Index a local project**
+```bash
+python -m agent.cli index <path-to-your-project>
+```
+
+**Index a GitHub repository**
+```bash
 python -m agent.cli index <repo-url>
+```
 
-Ask questions about the codebase
+**Query the codebase**
+```bash
 python -m agent.cli query "How does authentication work?"
+```
 
-Run in autonomous mode (watch for changes)
+**Run in autonomous mode**
+```bash
 python -m agent.cli watch ./my_project
+```
+
